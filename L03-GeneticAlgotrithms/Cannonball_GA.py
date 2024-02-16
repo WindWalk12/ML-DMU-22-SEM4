@@ -157,11 +157,11 @@ def fire():
         results = []
         generation = crossover(generation, width)
         mutate(generation)
-        display_all_generations(generation, height, width)
+        #display_all_generations(generation, height, width)
 
-    plt.show()
+    #plt.show()
 
-    #display_start_and_finish(generation0, generation, height, width)
+    display_start_and_finish(generation0, generation, height, width)
 
 
 def single_shot():

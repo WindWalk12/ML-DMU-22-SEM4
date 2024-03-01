@@ -1,0 +1,1 @@
+# Fitness function; How close to the sentence is correct based on chars

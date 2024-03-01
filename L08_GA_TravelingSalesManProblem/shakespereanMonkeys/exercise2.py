@@ -9,7 +9,8 @@ def randomStringGen(str_size, allowed_chars, noOfStrings = 10000):
         strings.append(''.join(random.choice(allowed_chars) for x in range(str_size)))
     return strings
 
-chars = string.ascii_lowercase + " "
+
+chars = string.ascii_letters + " "
 size = 39
 
 #print(chars)

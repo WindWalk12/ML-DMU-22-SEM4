@@ -7,7 +7,7 @@ def randomStringGen(str_size, allowed_chars):
     return ''.join(random.choice(allowed_chars) for x in range(str_size))
 
 
-chars = string.ascii_lowercase + " "
+chars = string.ascii_letters + " "
 size = 39
 
 #print(chars)
@@ -16,21 +16,20 @@ randomString = randomStringGen(size, chars)
 
 def fitnessFunction(randomString):
     fitness = 0
+    correct = 0
     for i in range(len(randomString)):
-        correct = 0
         if randomString[i] == sentence[i]:
             correct += 1
-        if correct > fitness:
-            fitness = correct
+    if correct > fitness:
+        fitness = correct
     return fitness
 
 def hillClimbing(randomString):
     fitness = 0
     bestSentence = randomString
-    print(bestSentence)
     i = 0
-    while fitness <= size:
-        i = i + 1
+    while fitness < size:
+        i += 1
         rand = random.randint(0, 38)
         sentencelist = list(bestSentence)
         sentencelist[rand] = random.choice(chars)
@@ -40,8 +39,7 @@ def hillClimbing(randomString):
             fitness = tempFitness
             bestSentence = tempSentence
         if i % 1000 == 0:
-            print("Best sentence right now is: " + bestSentence + " with fitness: " + str(fitness))
-    print("Done: " + bestSentence + " with fitness: " + str(fitness))
-
+            print("i: " + str(i) + " Best sentence right now is: " + bestSentence + " with fitness: " + str(fitness))
+    print("i: " + str(i) + " Done: " + bestSentence + " with fitness: " + str(fitness))
 
 hillClimbing(randomString)

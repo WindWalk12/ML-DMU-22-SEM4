@@ -71,8 +71,7 @@ def launch_population(population_size):
             if random.random() < mutation_factor:
                 mutate(child2)
             new_population.extend([child1, child2])
-
-        population = new_population
+        population = new_population[:-1]
         print("Going to gen: " + str(population_gen) + " best fitness: " + str(fittest[1]))
 
 

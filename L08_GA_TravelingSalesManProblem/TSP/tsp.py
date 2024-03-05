@@ -1,19 +1,25 @@
 import pandas as pd
 import random
 import math
-
-data = pd.read_csv('TSPcities1000.txt',sep='\s+',header=None)
-data = pd.DataFrame(data)
-
 import matplotlib.pyplot as plt
+
+data = pd.read_csv('TSPcities1000.txt',sep=r'\s+',header=None)
+data = pd.DataFrame(data)
 x = data[1]
 y = data[2]
 
 # Generation settings
 population_size = 100
-mutation_factor = 0.1
+mutation_factor = 0.7
 population_gen = 0
-route_size = 10
+route_size = 10  # Up to 1000
+
+
+def createRandomRoute(route_size):
+    tour = [i for i in range(route_size)]
+    random.shuffle(tour)
+    return tour
+
 
 def generate_population(population_size):
     population_list = []
@@ -21,32 +27,6 @@ def generate_population(population_size):
         population_list.append([createRandomRoute(route_size), 0])
     return population_list
 
-def createRandomRoute(route_size):
-    tour = [[i] for i in range(route_size)]
-    random.shuffle(tour)
-    return tour
-
-def fitness_function(population):
-    for i in range(len(population)):
-        fitness = 0
-        for j in range(1, len(population[i][0]) // 2, 2):
-            print("j: " + str(j))
-            fitness += int(population[i][0][j][0]) + int(population[i][0][j - 1][0])
-        print(fitness)
-
-# plot the tour - Adjust range 0..len, if you want to plot only a part of the tour.
-def plotCityRoute(route):
-    for i in range(0, len(route)):
-        plt.plot(x[i:i + 2], y[i:i + 2], 'ro-')
-    plt.show()
-
-# Alternativ kode:
-#  for i in range(0, len(route)-1):              
-#     plt.plot([x[route[i]],x[route[i+1]]], [y[route[i]],y[route[i+1]]], 'ro-')
-
-tour = createRandomRoute()
-print(tour)
-#plotCityRoute(tour)
 
 # calculate distance between cities
 def distancebetweenCities(city1x, city1y, city2x, city2y):
@@ -55,43 +35,59 @@ def distancebetweenCities(city1x, city1y, city2x, city2y):
     distance = math.sqrt((xDistance * xDistance) + (yDistance * yDistance))
     return distance
 
-# distance between city number 100 and city number 105
-dist= distancebetweenCities(x[100], y[100], x[105], y[105])
-print('Distance, % target: ', dist)
 
-best_score_progress = []  # Tracks progress
-
-# replace with your own calculations
-fitness_gen0 = 1000 # replace with your value
-print('Starting best score, % target: ', fitness_gen0)
-
-best_score = fitness_gen0
-# Add starting best score to progress tracker
-best_score_progress.append(best_score)
-
-# Here comes your GA program...
-best_score = 980
-best_score_progress.append(best_score)
-best_score = 960
-best_score_progress.append(best_score)
+def mutate(child):
+    rand = random.randint(0, len(child[0]) - 2)
+    temp_city = child[0][rand]
+    child[0][rand] = child[0][rand + 1]
+    child[0][rand + 1] = temp_city
 
 
-# GA has completed required generation
-print('End best score, % target: ', best_score)
+def crossover(parent1, parent2):
+    rand = random.randint(1, len(parent1[0]) - 1)
+    child = [parent1[0][:rand], 0]
+    for i in range(len(parent2[0])):
+        if not parent2[0][i] in child[0]:
+            child[0].append(parent2[0][i])
+    return child
 
-plt.plot(best_score_progress)
-plt.xlabel('Generation')
-plt.ylabel('Best Fitness - route length - in Generation')
-#plt.show()
+
+def fitness_function(population):
+    for i in range(len(population)):
+        fitness = 0
+        for j in range(len(population[i][0]) - 1):
+            fitness += distancebetweenCities(x[population[i][0][j]], y[population[i][0][j]], x[population[i][0][j + 1]], y[population[i][0][j + 1]])
+        population[i][1] = fitness
+
+
+def plotCityRoute(route):
+    for i in range(0, len(route)):
+        plt.plot(x[i:i + 2], y[i:i + 2], 'ro-')
+    plt.show()
 
 
 def launch_population(population_size):
     global population_gen
     population = generate_population(population_size)
-    print(fitness_function(population))
     while True:
         population_gen += 1
-        break
+        fitness_function(population)
+        population.sort(key=lambda x: x[1])
+        fittest = population[0]
+        if population_gen == 10000:
+            print("Done on gen: " + str(population_gen) + " - with best distance: " + str(fittest[1]) + " - Tour: " + " ".join(str(e) for e in fittest[0]))
+            plotCityRoute(fittest[0])
+            break
+        new_population = [fittest]
+        for i in range(len(population) - 1):
+            parent1, parent2 = random.choices(population, k=2)
+            child = crossover(parent1, parent2)
+            if random.random() < mutation_factor:
+                mutate(child)
+            new_population.extend([child])
+        population = new_population
+        if population_gen % 100 == 0:
+            print("Going to gen: " + str(population_gen) + " with best distance: " + str(fittest[1]))
 
 
 launch_population(population_size)

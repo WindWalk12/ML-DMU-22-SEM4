@@ -61,8 +61,12 @@ def fitness_function(population):
 
 
 def plotCityRoute(route):
-    for i in range(0, len(route)):
-        plt.plot(x[i:i + 2], y[i:i + 2], 'ro-')
+    x_coords_route = [x[i] for i in route]
+    y_coords_route = [y[i] for i in route]
+    plt.plot(x_coords_route, y_coords_route, marker='o', linestyle='-')
+    plt.title('Route Plot')
+    plt.xlabel('X')
+    plt.ylabel('Y')
     plt.show()
 
 

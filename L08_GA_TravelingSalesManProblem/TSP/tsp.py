@@ -37,10 +37,20 @@ def distance_between_cities(city1x, city1y, city2x, city2y):
 
 
 def mutate(child):
-    rand = random.randint(0, len(child[0]) - 2)
-    temp_city = child[0][rand]
-    child[0][rand] = child[0][rand + 1]
-    child[0][rand + 1] = temp_city
+    if random.random() < 0.5:
+        rand_swap = random.randint(0, len(child[0]) - 2)
+        temp_city = child[0][rand_swap]
+        child[0][rand_swap] = child[0][rand_swap + 1]
+        child[0][rand_swap + 1] = temp_city
+    else:
+        start_index = random.randint(0, len(child[0]) - 2)
+        end_index = random.randint(start_index + 1, len(child[0]) - 1)
+        while start_index < end_index:
+            temp_city = child[0][start_index]
+            child[0][start_index] = child[0][end_index]
+            child[0][end_index] = temp_city
+            start_index += 1
+            end_index -= 1
 
 
 def crossover(parent1, parent2):

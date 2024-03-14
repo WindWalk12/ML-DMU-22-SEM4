@@ -10,7 +10,7 @@ y = data[2]
 
 # Generation settings
 population_size = 100
-mutation_factor = 0.2
+mutation_factor = 0.7
 population_gen = 0
 route_size = 10  # Up to 1000
 

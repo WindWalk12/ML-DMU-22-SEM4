@@ -10,12 +10,12 @@ y = data[2]
 
 # Generation settings
 population_size = 100
-mutation_factor = 0.7
+mutation_factor = 0.2
 population_gen = 0
 route_size = 10  # Up to 1000
 
 
-def createRandomRoute(route_size):
+def create_random_route(route_size):
     tour = [i for i in range(route_size)]
     random.shuffle(tour)
     return tour
@@ -24,12 +24,12 @@ def createRandomRoute(route_size):
 def generate_population(population_size):
     population_list = []
     for i in range(population_size):
-        population_list.append([createRandomRoute(route_size), 0])
+        population_list.append([create_random_route(route_size), 0])
     return population_list
 
 
 # calculate distance between cities
-def distancebetweenCities(city1x, city1y, city2x, city2y):
+def distance_between_cities(city1x, city1y, city2x, city2y):
     xDistance = abs(city1x-city2x)
     yDistance = abs(city1y-city2y)
     distance = math.sqrt((xDistance * xDistance) + (yDistance * yDistance))
@@ -56,11 +56,11 @@ def fitness_function(population):
     for i in range(len(population)):
         fitness = 0
         for j in range(len(population[i][0]) - 1):
-            fitness += distancebetweenCities(x[population[i][0][j]], y[population[i][0][j]], x[population[i][0][j + 1]], y[population[i][0][j + 1]])
+            fitness += distance_between_cities(x[population[i][0][j]], y[population[i][0][j]], x[population[i][0][j + 1]], y[population[i][0][j + 1]])
         population[i][1] = fitness
 
 
-def plotCityRoute(route):
+def plot_city_route(route):
     x_coords_route = [x[i] for i in route]
     y_coords_route = [y[i] for i in route]
     plt.plot(x_coords_route, y_coords_route, marker='o', linestyle='-')
@@ -80,7 +80,7 @@ def launch_population(population_size):
         fittest = population[0]
         if population_gen == 10000:
             print("Done on gen: " + str(population_gen) + " - with best distance: " + str(fittest[1]) + " - Tour: " + " ".join(str(e) for e in fittest[0]))
-            plotCityRoute(fittest[0])
+            plot_city_route(fittest[0])
             break
         new_population = [fittest]
         for i in range(len(population) - 1):

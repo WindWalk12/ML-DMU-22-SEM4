@@ -31,14 +31,17 @@ for i in range(20):
 
 plt.tight_layout()
 
-plt.show()
+#plt.show()
 
 X_train, X_test, y_train, y_test = train_test_split(mnist.data,
                                                     mnist.target,
                                                    test_size=0.2,
                                                    random_state=0)
 
-clf = RandomForestClassifier(n_estimators=10, max_depth=None)
+from sklearn.neural_network import MLPClassifier
+
+#clf = RandomForestClassifier(n_estimators=50, max_depth=None)
+clf = MLPClassifier(hidden_layer_sizes=(100, 100, 100, 40), max_iter=10000, random_state=0)
 
 clf.fit(X_train, y_train)
 y_preds = clf.predict(X_test)

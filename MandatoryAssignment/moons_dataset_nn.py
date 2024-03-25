@@ -4,7 +4,6 @@ Created on Mon December 9 15:16:37 2018
 
 @author: sila
 """
-
 from sklearn.datasets import make_moons;
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -150,11 +149,32 @@ pyplot.show()
 
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
+from sklearn import linear_model
+from sklearn.cluster import KMeans
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn import svm
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, random_state=42)
 
-mlp = MLPClassifier(solver='lbfgs', random_state=0, hidden_layer_sizes=[10, 10], alpha=0.001, max_iter=10000)
+mlp = MLPClassifier(solver='lbfgs', random_state=0, hidden_layer_sizes=[10, 10, 10], alpha=0.00001, max_iter=10000)
+#mlp = linear_model.LogisticRegression(C=1000)
+#mlp = DecisionTreeClassifier(random_state=1)
+#mlp = RandomForestClassifier(n_estimators=20, max_depth=None, random_state=1)
+#mlp = svm.SVC(kernel='poly', C=10, degree=5, random_state=1)
 mlp.fit(X_train, y_train)
+
+#Kmeans stuff
+# k = 2
+# kmeans = KMeans(n_clusters=k, random_state=0).fit(X_train)
+# labels = kmeans.labels_
+# clusters = kmeans.cluster_centers_
+# from matplotlib.colors import ListedColormap
+# cmap_bold = [ListedColormap(['#FF0000', '#00FF00']),
+#              ListedColormap(['#FF0000', '#00FF00', '#0000FF']),
+#              ListedColormap(['#FF0000', '#00FF00', '#0000FF', '#FFFF00']),
+#              ListedColormap(['#FF0000', '#00FF00', '#0000FF', '#FFFF00','#00FFFF'])]
+# pyplot.scatter(X_train, y_train, c=labels, edgecolor='black', cmap=cmap_bold[k - 1], s=20)
 
 plot_2d_separator(mlp, X_train, fill=True, alpha=.3)
 discrete_scatter(X_train[:, 0], X_train[:, 1], y_train)
